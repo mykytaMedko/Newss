@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newss", "Newss\Newss.csproj", "{84CA81F4-476C-4A87-9772-B692E376C2AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newss.Core", "Newss.Core\Newss.Core.csproj", "{2C500377-079D-4C0D-9228-834F69872D6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewssCore", "NewssCore\NewssCore.csproj", "{CF770262-348F-49BF-B407-DBEC9FC9CBFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{84CA81F4-476C-4A87-9772-B692E376C2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84CA81F4-476C-4A87-9772-B692E376C2AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84CA81F4-476C-4A87-9772-B692E376C2AF}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{2C500377-079D-4C0D-9228-834F69872D6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C500377-079D-4C0D-9228-834F69872D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C500377-079D-4C0D-9228-834F69872D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C500377-079D-4C0D-9228-834F69872D6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF770262-348F-49BF-B407-DBEC9FC9CBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF770262-348F-49BF-B407-DBEC9FC9CBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF770262-348F-49BF-B407-DBEC9FC9CBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF770262-348F-49BF-B407-DBEC9FC9CBFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

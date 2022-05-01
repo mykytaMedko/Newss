@@ -1,8 +1,7 @@
-﻿using Newss.Core;
-using Newss.Core.Models;
-using Newss.Core.Constants;
+﻿using NewssCore;
+using NewssCore.Models;
+using NewssCore.Constants;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Newss;
 
