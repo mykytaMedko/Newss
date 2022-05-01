@@ -17,15 +17,20 @@ namespace Newss.Core
         {
             _apiKey = apiKey;
 
-            _httpClient = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
-            _httpClient.DefaultRequestHeaders.Add("user-agent", "News-API-csharp/0.1");
-            _httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
+            _httpClient = new HttpClient();
+            //_httpClient.DefaultRequestHeaders.Add("user-agent", "News-API-csharp/0.1");
+            //_httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
         }
 
         public async Task<ArticlesResult> GetTopHeadlinesAsync(TopHeadlinesRequest request)
         {
             // build the querystring
             var queryParams = new List<string>();
+
+            //if (!string.IsNullOrEmpty(_apiKey))
+            //{
+            //    queryParams.Add("=" + _apiKey);
+            //}
 
             // q
             if (!string.IsNullOrWhiteSpace(request.Q))
@@ -81,6 +86,11 @@ namespace Newss.Core
         {
             // build the querystring
             var queryParams = new List<string>();
+
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                queryParams.Add("apiKey=" + _apiKey);
+            }
 
             // q
             if (!string.IsNullOrWhiteSpace(request.Q))
@@ -153,8 +163,8 @@ namespace Newss.Core
             var articlesResult = new ArticlesResult();
 
             // make the http request
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, _baseUrl + endpoint + "?" + querystring);
-            var httpResponse = await _httpClient.SendAsync(httpRequest);
+            var url = _baseUrl + endpoint + "?" + querystring;
+            var httpResponse = await _httpClient.GetAsync(url);
 
             var json = await httpResponse.Content?.ReadAsStringAsync();
             if (!string.IsNullOrWhiteSpace(json))

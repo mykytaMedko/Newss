@@ -1,6 +1,6 @@
-﻿using NewsAPI;
-using NewsAPI.Constants;
-using NewsAPI.Models;
+﻿using Newss.Core;
+using Newss.Core.Models;
+using Newss.Core.Constants;
 using System.Collections.ObjectModel;
 using System.Linq;
 
