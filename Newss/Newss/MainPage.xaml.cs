@@ -25,16 +25,16 @@ public partial class MainPage : ContentPage
         if (q == null)
             q = "Україна";
 
-        var result = _newsClient.GetEverything(new EverythingRequest
-        {
-            Language = Languages.UK,
-            SortBy = SortBys.Popularity,
-            PageSize = 30,
-            Q = q
-        });
+        //var result = _newsClient.GetEverything(new EverythingRequest
+        //{
+        //    Q = q,
+        //    SortBy = SortBys.PublishedAt,
+        //    Language = Languages.UK,
+        //    From = new DateTime(2022, 4, 26)
+        //});
 
         //var result = GetErrorMock();
-        //var result = GetOkMock();
+        var result = GetOkMock();
 
         if (result.Status == Statuses.Error)
         {
@@ -152,7 +152,7 @@ public partial class MainPage : ContentPage
     private void btnSearch_Clicked(object sender, EventArgs e)
     {
         var query = eQuery.Text;
-        if (query.Length >= 3)
+        if (query != null && query.Length >= 3)
         {
             LoadInitArticles(query);
         }

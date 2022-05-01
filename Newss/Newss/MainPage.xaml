@@ -36,8 +36,7 @@
                                                  HorizontalOptions="Fill"
                                                  VerticalOptions="Start"
                                                  HeightRequest="171"
-                                                 Source="{Binding UrlToImage}"
-                                                ></Image>
+                                                 Source="{Binding UrlToImage}"/>
                                     </StackLayout>
                                     <Label Grid.Row="1"
                                        x:Name="Title"

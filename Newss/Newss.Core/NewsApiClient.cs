@@ -1,8 +1,7 @@
 ﻿using Newss.Core.Constants;
 using Newss.Core.Models;
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Net;
+using System.Text.Json;
 
 namespace Newss.Core
 {
@@ -170,8 +169,8 @@ namespace Newss.Core
             if (!string.IsNullOrWhiteSpace(json))
             {
                 // convert the json to an obj
-                var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(json);
-                articlesResult.Status = apiResponse.Status;
+                var apiResponse = JsonSerializer.Deserialize<ApiResponse>(json);
+                articlesResult.Status = apiResponse.Status == "ok" ? Statuses.Ok : Statuses.Error;
                 if (articlesResult.Status == Statuses.Ok)
                 {
                     articlesResult.TotalResults = apiResponse.TotalResults;
