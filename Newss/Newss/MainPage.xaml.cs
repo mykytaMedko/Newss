@@ -24,6 +24,8 @@ public partial class MainPage : ContentPage
         if (q == null)
             q = "Україна";
 
+        var current = Connectivity.NetworkAccess;
+
         //var result = _newsClient.GetEverything(new EverythingRequest
         //{
         //    Q = q,
@@ -87,55 +89,6 @@ public partial class MainPage : ContentPage
         };
     }
 
-    private void newsView_Scrolled(object sender, ScrolledEventArgs e)
-    {
-
-
-        //var listView = sender as ListView;
-        //double listViewHeight = (newsArticle.Count * listView.Height) / 2;
-        //if (listViewHeight > e.ScrollY)
-        //    return;
-
-
-
-
-
-        //var listView = sender as ListView;
-        //double scrollingSpace = listView.Height;
-        //if (scrollingSpace > e.ScrollY)
-        //    return;
-
-        //SetBusy(true);
-
-        //Application.Current.Dispatcher.Dispatch(async () =>
-        //{
-        //    var result = GetErrorMock(); //await _newsClient.FetchNewsAsync(
-        //                                 //new TopHeadlinesRequest(_query, Country.Ukraine)
-        //                                 //);
-
-        //    if (result.ResponseStatus == ResponseStatus.Error)
-        //    {
-        //        await DisplayAlert("Помилка", result.Error.Value.ToString(), "OK");
-        //        return;
-        //    }
-        //    newsArticle = new ObservableCollection<NewsArticle>();
-        //    foreach (var article in result.Articles)
-        //    {
-        //        newsArticle.Add(article);
-        //    }
-        //    newsView.ItemsSource = newsArticle;
-        //});
-
-        //SetBusy(false);
-    }
-
-    //private void SetBusy(bool state)
-    //{
-    //    indicator.IsRunning = state;
-    //    indicator.IsVisible = state;
-    //    indicator.Color = Color.FromArgb("#e92323");
-    //}
-
     private async void newsView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
         var article = e.SelectedItem as Article;
@@ -148,13 +101,18 @@ public partial class MainPage : ContentPage
         });
     }
 
-    private void btnSearch_Clicked(object sender, EventArgs e)
+    private async void btnSearch_Clicked(object sender, EventArgs e)
     {
-        var query = eQuery.Text;
-        if (query != null && query.Length >= 3)
+        var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
         {
-            LoadInitArticles(query);
-        }
+            Title = $"maui.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.jpg"
+        });
+
+        //var query = eQuery.Text;
+        //if (query != null && query.Length >= 3)
+        //{
+        //    LoadInitArticles(query);
+        //}
     }
 
     private void eQuery_TextChanged(object sender, TextChangedEventArgs e)

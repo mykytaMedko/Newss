@@ -9,7 +9,7 @@
 
         <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start" TextChanged="eQuery_TextChanged"/>
         <Button x:Name="btnSearch" Text="Пошук" TextColor="{AppThemeBinding Light=White, Dark=Black}" BackgroundColor="{AppThemeBinding Dark=White, Light=Black}" Grid.Row="0" HorizontalOptions="End" Clicked="btnSearch_Clicked"/>
-        <ListView x:Name="newsView" Margin="5" Scrolled="newsView_Scrolled" ItemSelected="newsView_ItemSelected" Grid.Row="1">
+        <ListView x:Name="newsView" Margin="5" ItemSelected="newsView_ItemSelected" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
