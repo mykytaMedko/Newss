@@ -10,6 +10,8 @@
         <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start" WidthRequest="100"/>
         <Button x:Name="btnSearch" Grid.Row="0" Text="Пошук" HorizontalOptions="End" Clicked="btnSearch_Clicked" WidthRequest="75"/>
 
+
+        <!--https://github.com/dotnet/maui/issues/6518-->
         <CollectionView x:Name="collectionNews" Grid.Row="1" SelectionChanged="collectionNews_SelectionChanged" SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate>

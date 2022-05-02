@@ -1,4 +1,4 @@
-﻿namespace Newss.Core.Constants
+﻿namespace Newss.Infra.Constants
 {
     public enum Categories
     {

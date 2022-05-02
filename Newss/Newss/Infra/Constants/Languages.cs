@@ -1,4 +1,4 @@
-﻿namespace NewssCore.Constants
+﻿namespace Newss.Infra.Constants
 {
     public enum Languages
     {

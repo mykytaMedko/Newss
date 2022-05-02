@@ -1,6 +1,5 @@
-﻿using NewssCore;
-using NewssCore.Models;
-using NewssCore.Constants;
+﻿using Newss.Infra.Models;
+using Newss.Infra.Constants;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Text.Json;

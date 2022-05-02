@@ -1,9 +1,9 @@
-﻿using Newss.Core.Constants;
+﻿using Newss.Infra.Constants;
 using System.Text.Json.Serialization;
 
-namespace Newss.Core.Models
+namespace Newss.Infra.Models
 {
-    internal class ApiResponse
+    public class ApiResponse
     {
         [JsonPropertyName("status")]
         public string Status { get; set; }

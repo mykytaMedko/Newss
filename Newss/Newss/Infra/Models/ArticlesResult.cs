@@ -1,6 +1,6 @@
-﻿using NewssCore.Constants;
+﻿using Newss.Infra.Constants;
 
-namespace NewssCore.Models
+namespace Newss.Infra.Models
 {
     public class ArticlesResult
     {

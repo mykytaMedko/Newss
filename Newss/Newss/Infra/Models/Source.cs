@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NewssCore.Models
+namespace Newss.Infra.Models
 {
     public class Source
     {

@@ -1,6 +1,6 @@
-﻿using Newss.Core.Constants;
+﻿using Newss.Infra.Constants;
 
-namespace Newss.Core.Models
+namespace Newss.Infra.Models
 {
     public class Error
     {
