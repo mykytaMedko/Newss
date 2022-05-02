@@ -25,12 +25,6 @@ namespace NewssCore
         {
             // build the querystring
             var queryParams = new List<string>();
-
-            //if (!string.IsNullOrEmpty(_apiKey))
-            //{
-            //    queryParams.Add("=" + _apiKey);
-            //}
-
             // q
             if (!string.IsNullOrWhiteSpace(request.Q))
             {

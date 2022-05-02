@@ -7,81 +7,39 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start" TextChanged="eQuery_TextChanged"/>
-        <Button x:Name="btnSearch" Text="Пошук" TextColor="{AppThemeBinding Light=White, Dark=Black}" BackgroundColor="{AppThemeBinding Dark=White, Light=Black}" Grid.Row="0" HorizontalOptions="End" Clicked="btnSearch_Clicked"/>
-        <ListView x:Name="newsView" Margin="5" ItemSelected="newsView_ItemSelected" Grid.Row="1">
-            <ListView.ItemTemplate>
+        <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start"/>
+        <Button x:Name="btnSearch" Grid.Row="0" Text="Пошук" HorizontalOptions="End"/>
+
+        <CollectionView x:Name="collectionNews" Grid.Row="1" SelectionChanged="collectionNews_SelectionChanged" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.View>
-                            <Frame x:Name="CourseFrame"
-                                CornerRadius="5"
-                                Padding="5"
-                                HasShadow="True"
-                                IsClippedToBounds="True"               
-                                BackgroundColor="White">
-                                <Grid RowSpacing="0"
-                                    HorizontalOptions="FillAndExpand">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <StackLayout Grid.Row="0"
-                                        IsClippedToBounds="True">
-                                        <Image  x:Name="UrlToImage"
-                                                 Aspect="AspectFill"
-                                                 HorizontalOptions="Fill"
-                                                 VerticalOptions="Start"
-                                                 HeightRequest="171"
-                                                 Source="{Binding UrlToImage}"/>
-                                    </StackLayout>
-                                    <Label Grid.Row="1"
-                                       x:Name="Title"
-                                       HorizontalTextAlignment="Start"
-                                       VerticalTextAlignment="Start"
-                                       VerticalOptions="StartAndExpand"
-                                       FontSize="Large"
-                                       FontAttributes="None"
-                                       TextColor="Black"
-                                       HorizontalOptions="Fill"
-                                       Text="{Binding Title}"
-                                       Margin="15,5,10,0"
-                                       LineBreakMode="TailTruncation">
-                                    </Label>
-
-                                    <Label x:Name="Description"
-                                       Grid.Row="2"
-                                       Text="{Binding Description}"
-                                       FontSize="Small"
-                                       FontAttributes="None"
-                                       TextColor="Black"
-                                       HorizontalOptions="Fill"
-                                       Margin="15,0,10,0"
-                                       LineBreakMode="TailTruncation" />
-
-                                    <StackLayout Orientation="Horizontal"
-                                         Grid.Row="3"
-                                         HorizontalOptions="Fill"
-                                         Margin="5,5,10,0">
-                                        <Label Text="{Binding PublishedAt}"
-                                            FontSize="Micro"
-                                            FontAttributes="None"
-                                            TextColor="Black"
-                                            HorizontalOptions="EndAndExpand"
-                                            HorizontalTextAlignment="End"
-                                            VerticalOptions="Center"
-                                            LineBreakMode="TailTruncation" />
-                                    </StackLayout>
-                                </Grid>
-                            </Frame>
-                        </ViewCell.View>
-                    </ViewCell>
+                    <Grid Padding="10" RowDefinitions="60" ColumnDefinitions="70,*">
+                        <Image Grid.RowSpan="2" 
+                            Source="{Binding UrlToImage}" 
+                            Aspect="AspectFill"
+                            HeightRequest="60" 
+                            WidthRequest="60">
+                            <Image.Clip>
+                                <RectangleGeometry Rect="0,0,160,160"/>
+                            </Image.Clip>
+                        </Image>
+                        <Label Grid.Column="1" 
+                            Text="{Binding Title}" 
+                            FontAttributes="Bold"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            VerticalOptions="Start"
+                            LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="1" 
+                            Text="{Binding AuthorAndTime}"
+                            LineBreakMode="TailTruncation"
+                            FontAttributes="Italic"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            VerticalOptions="End" />
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" x:Name="indicator"/>
     </Grid>
 </ContentPage>

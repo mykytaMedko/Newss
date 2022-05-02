@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NewssCore.Models
 {
-    internal class ApiResponse
+    public class ApiResponse
     {
         [JsonPropertyName("status")]
         public string Status { get; set; }

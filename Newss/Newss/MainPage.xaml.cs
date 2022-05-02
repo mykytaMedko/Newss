@@ -2,91 +2,31 @@
 using NewssCore.Models;
 using NewssCore.Constants;
 using System.Collections.ObjectModel;
+using System.Net;
+using System.Text.Json;
 
 namespace Newss;
 
 public partial class MainPage : ContentPage
 {
-    private readonly NewsApiClient _newsClient;
-    private ObservableCollection<Article> newsArticle;
-    private string apiKey = "5e393e6b41664448b85bb078ef53b78e";
-    private string _query;
+    private string _apiKey = "5e393e6b41664448b85bb078ef53b78e";
+    private HttpClient _hhttpClient;
+
     public MainPage()
     {
         InitializeComponent();
-        _newsClient = new NewsApiClient(apiKey);
-
-        LoadInitArticles();
+        _hhttpClient = GetHttpClient();
     }
 
-    public void LoadInitArticles(string q = null)
+    protected override void OnAppearing()
     {
-        if (q == null)
-            q = "Україна";
-
-        var current = Connectivity.NetworkAccess;
-
-        //var result = _newsClient.GetEverything(new EverythingRequest
-        //{
-        //    Q = q,
-        //    SortBy = SortBys.PublishedAt,
-        //    Language = Languages.UK,
-        //    From = new DateTime(2022, 4, 26)
-        //});
-
-        //var result = GetErrorMock();
-        var result = GetOkMock();
-
-        if (result.Status == Statuses.Error)
+        base.OnAppearing();
+        GetArticles(new TopHeadlinesRequest
         {
-            DisplayAlert("Помилка", result.Error.Message, "OK");
-            return;
-        }
-        newsArticle = new ObservableCollection<Article>();
-        foreach (var article in result.Articles)
-        {
-            newsArticle.Add(article);
-        }
-        newsView.ItemsSource = newsArticle;
-    }
+            Country = Countries.UA,
+            Language = Languages.UK
+        });
 
-    public ArticlesResult GetOkMock()
-    {
-        var result = new ArticlesResult();
-        result.Error = null;
-        result.TotalResults = 25;
-        result.Status = Statuses.Ok;
-
-        var sd = new List<Article>();
-        for (int i = 1; i <= result.TotalResults; i++)
-        {
-            sd.Add(new Article
-            {
-                Title = $"Title {i}",
-                Description = $"Some desc {i}",
-                Author = $"Author {i}",
-                PublishedAt = DateTime.Today.AddDays(-i),
-                Url = "https://www.msn.com/en-xl/europe/top-stories/pelosi-in-surprise-kyiv-trip-vows-u-s-support-until-the-fight-is-done/ar-AAWNAko?ocid=msedgntp&cvid=bbf271aba6844391b5f3d14bb3bed654",
-                UrlToImage = "https://images.unian.net/photos/2022_04/1649313913-1098.jpg?r=389264",
-                Source = new Source
-                {
-                    Name = ""
-                }
-            });
-        }
-        result.Articles = sd;
-        return result;
-    }
-
-    public ArticlesResult GetErrorMock()
-    {
-        return new ArticlesResult
-        {
-            Error = new Error { Message = "", Code = ErrorCodes.ApiKeyDisabled },
-            Status = Statuses.Error,
-            TotalResults = 0,
-            Articles = null
-        };
     }
 
     private async void newsView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -101,25 +41,190 @@ public partial class MainPage : ContentPage
         });
     }
 
-    private async void btnSearch_Clicked(object sender, EventArgs e)
+    private void ConfigArticles(IEnumerable<Article> articles)
     {
-        var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
+        foreach (var article in articles)
         {
-            Title = $"maui.{DateTime.Now.ToString("dd.MM.yyyy_hh.mm.ss")}.jpg"
-        });
-
-        //var query = eQuery.Text;
-        //if (query != null && query.Length >= 3)
-        //{
-        //    LoadInitArticles(query);
-        //}
+            if (article.UrlToImage == null)
+                article.UrlToImage = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
+            article.SetAuthorAndTime();
+        }
     }
 
-    private void eQuery_TextChanged(object sender, TextChangedEventArgs e)
+    private void SetCollection(IEnumerable<Article> articles)
     {
-        if (eQuery.Text.Length == 0)
+        ConfigArticles(articles);
+        collectionNews.ItemsSource = articles;
+    }
+
+    private HttpClient GetHttpClient()
+    {
+        var handler = new HttpClientHandler { UseCookies = true, CookieContainer = new CookieContainer() };
+        var httpClient = new HttpClient(handler);
+        httpClient.DefaultRequestHeaders.Add("user-agent", "News-API-csharp/0.6");
+        httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
+        return httpClient;
+    }
+
+    private void GetArticles(TopHeadlinesRequest request)
+    {
+        var queryString = QueryString(request);
+        var url = "https://newsapi.org/v2/" + "top-headlines" + "?" + queryString;
+        MakeRuquest(url);
+    }
+
+    private void GetArticles(EverythingRequest request)
+    {
+        var queryString = QueryString(request);
+        var url = "https://newsapi.org/v2/" + "everything" + "?" + queryString;
+        MakeRuquest(url);
+    }
+
+    public string QueryString(TopHeadlinesRequest request)
+    {
+        var queryParams = new List<string>();
+        // q
+        if (!string.IsNullOrWhiteSpace(request.Q))
         {
-            LoadInitArticles();
+            queryParams.Add("q=" + request.Q);
         }
+
+        // sources
+        if (request.Sources.Count > 0)
+        {
+            queryParams.Add("sources=" + string.Join(",", request.Sources));
+        }
+
+        if (request.Category.HasValue)
+        {
+            queryParams.Add("category=" + request.Category.Value.ToString().ToLowerInvariant());
+        }
+
+        if (request.Language.HasValue)
+        {
+            queryParams.Add("language=" + request.Language.Value.ToString().ToLowerInvariant());
+        }
+
+        if (request.Country.HasValue)
+        {
+            queryParams.Add("country=" + request.Country.Value.ToString().ToLowerInvariant());
+        }
+
+        // page
+        if (request.Page > 1)
+        {
+            queryParams.Add("page=" + request.Page);
+        }
+
+        // page size
+        if (request.PageSize > 0)
+        {
+            queryParams.Add("pageSize=" + request.PageSize);
+        }
+
+        // join them together
+        return string.Join("&", queryParams.ToArray());
+    }
+
+    public string QueryString(EverythingRequest request)
+    {
+        var queryParams = new List<string>();
+
+        if (!string.IsNullOrEmpty(_apiKey))
+        {
+            queryParams.Add("apiKey=" + _apiKey);
+        }
+
+        // q
+        if (!string.IsNullOrWhiteSpace(request.Q))
+        {
+            queryParams.Add("q=" + request.Q);
+        }
+
+        // sources
+        if (request.Sources.Count > 0)
+        {
+            queryParams.Add("sources=" + string.Join(",", request.Sources));
+        }
+
+        // domains
+        if (request.Domains.Count > 0)
+        {
+            queryParams.Add("domains=" + string.Join(",", request.Sources));
+        }
+
+        // from
+        if (request.From.HasValue)
+        {
+            queryParams.Add("from=" + string.Format("{0:s}", request.From.Value));
+        }
+
+        // to
+        if (request.To.HasValue)
+        {
+            queryParams.Add("to=" + string.Format("{0:s}", request.To.Value));
+        }
+
+        // language
+        if (request.Language.HasValue)
+        {
+            queryParams.Add("language=" + request.Language.Value.ToString().ToLowerInvariant());
+        }
+
+        // sortBy
+        if (request.SortBy.HasValue)
+        {
+            queryParams.Add("sortBy=" + request.SortBy.Value.ToString());
+        }
+
+        // page
+        if (request.Page > 1)
+        {
+            queryParams.Add("page=" + request.Page);
+        }
+
+        // page size
+        if (request.PageSize > 0)
+        {
+            queryParams.Add("pageSize=" + request.PageSize);
+        }
+
+        // join them together
+        return string.Join("&", queryParams.ToArray());
+    }
+
+    private async void MakeRuquest(string url)
+    {
+        var response = await _hhttpClient.GetAsync(url);
+        if (!response.IsSuccessStatusCode)
+        {
+            await DisplayAlert("Помилка", response.StatusCode.ToString(), "OK");
+            return;
+        }
+        else
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var articles = JsonSerializer.Deserialize<ApiResponse>(content);
+            if (articles.Status == "ok")
+            {
+                SetCollection(articles.Articles);
+            }
+            else
+            {
+                await DisplayAlert("Помилка", articles.Message, "OK");
+            }
+        }
+    }
+
+    private async void collectionNews_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var article = e.CurrentSelection[0] as Article;
+        await Browser.OpenAsync(article.Url, new BrowserLaunchOptions
+        {
+            LaunchMode = BrowserLaunchMode.SystemPreferred,
+            TitleMode = BrowserTitleMode.Show,
+            PreferredControlColor = Color.FromArgb("#fe988d"),
+            PreferredToolbarColor = Color.FromArgb("#fdbd29"),
+        });
     }
 }
