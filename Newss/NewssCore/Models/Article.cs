@@ -29,7 +29,7 @@ namespace NewssCore.Models
             var time = GetTime(PublishedAt);
             if (author != null && time != null)
             {
-                AuthorAndTime = $"{author} ° {time}";
+                AuthorAndTime = $"{author} : {time}";
             }
             else
             {

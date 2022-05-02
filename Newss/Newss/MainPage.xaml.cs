@@ -29,30 +29,23 @@ public partial class MainPage : ContentPage
 
     }
 
-    private async void newsView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        var article = e.SelectedItem as Article;
-        await Browser.OpenAsync(article.Url, new BrowserLaunchOptions
-        {
-            LaunchMode = BrowserLaunchMode.SystemPreferred,
-            TitleMode = BrowserTitleMode.Show,
-            PreferredControlColor = Color.FromArgb("#fe988d"),
-            PreferredToolbarColor = Color.FromArgb("#fdbd29"),
-        });
-    }
-
     private void ConfigArticles(IEnumerable<Article> articles)
     {
         foreach (var article in articles)
         {
-            if (article.UrlToImage == null)
+            if (article.UrlToImage == null) //problem with load images https://github.com/dotnet/maui/issues/6067
                 article.UrlToImage = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
             article.SetAuthorAndTime();
         }
     }
 
-    private void SetCollection(IEnumerable<Article> articles)
+    private async void SetCollection(IEnumerable<Article> articles)
     {
+        if (articles == null || articles.Count() == 0)
+        {
+            await DisplayAlert("Повідомлення", "Не знайдено жодної новини на цю тему", "ок");
+            return;
+        }
         ConfigArticles(articles);
         collectionNews.ItemsSource = articles;
     }
@@ -226,5 +219,16 @@ public partial class MainPage : ContentPage
             PreferredControlColor = Color.FromArgb("#fe988d"),
             PreferredToolbarColor = Color.FromArgb("#fdbd29"),
         });
+    }
+
+    private void btnSearch_Clicked(object sender, EventArgs e)
+    {
+        if (eQuery.Text != null && eQuery.Text.Length > 2)
+            GetArticles(new EverythingRequest
+            {
+                Language = Languages.UK,
+                Q = eQuery.Text,
+                SortBy = SortBys.PublishedAt
+            });
     }
 }

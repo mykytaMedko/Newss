@@ -7,8 +7,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start"/>
-        <Button x:Name="btnSearch" Grid.Row="0" Text="Пошук" HorizontalOptions="End"/>
+        <Entry x:Name="eQuery" Grid.Row="0" HorizontalOptions="Start" WidthRequest="100"/>
+        <Button x:Name="btnSearch" Grid.Row="0" Text="Пошук" HorizontalOptions="End" Clicked="btnSearch_Clicked" WidthRequest="75"/>
 
         <CollectionView x:Name="collectionNews" Grid.Row="1" SelectionChanged="collectionNews_SelectionChanged" SelectionMode="Single">
             <CollectionView.ItemTemplate>
@@ -39,7 +39,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" x:Name="indicator"/>
     </Grid>
 </ContentPage>
