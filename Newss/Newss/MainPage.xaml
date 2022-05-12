@@ -15,12 +15,12 @@
         <CollectionView x:Name="collectionNews" Grid.Row="1" SelectionChanged="collectionNews_SelectionChanged" SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="10" RowDefinitions="60" ColumnDefinitions="70,*">
+                    <Grid Padding="10" RowDefinitions="70" ColumnDefinitions="80,*">
                         <Image Grid.RowSpan="2" 
                             Source="{Binding UrlToImage}" 
                             Aspect="AspectFill"
-                            HeightRequest="60" 
-                            WidthRequest="60">
+                            HeightRequest="70" 
+                            WidthRequest="70">
                             <Image.Clip>
                                 <RectangleGeometry Rect="0,0,160,160"/>
                             </Image.Clip>
