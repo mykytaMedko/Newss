@@ -1,6 +1,5 @@
-﻿using Newss.Infra.Models;
 using Newss.Infra.Constants;
-using System.Collections.ObjectModel;
+using Newss.Infra.Models;
 using System.Net;
 using System.Text.Json;
 
@@ -9,12 +8,27 @@ namespace Newss;
 public partial class MainPage : ContentPage
 {
     private string _apiKey = "5e393e6b41664448b85bb078ef53b78e";
-    private HttpClient _hhttpClient;
+    private HttpClient _httpClient;
+    private IConnectivity _connectivity;
 
     public MainPage()
     {
         InitializeComponent();
-        _hhttpClient = GetHttpClient();
+        _httpClient = GetHttpClient();
+        _connectivity = Connectivity.Current;
+        _connectivity.ConnectivityChanged += connectivity_ConnectivityChanged;
+    }
+
+    private void connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+    {
+        if (e.NetworkAccess == NetworkAccess.Internet)
+        {
+            GetArticles(new TopHeadlinesRequest
+            {
+                Country = Countries.UA,
+                Language = Languages.UK
+            });
+        }
     }
 
     protected override void OnAppearing()
@@ -25,7 +39,6 @@ public partial class MainPage : ContentPage
             Country = Countries.UA,
             Language = Languages.UK
         });
-
     }
 
     private void ConfigArticles(IEnumerable<Article> articles)
@@ -187,7 +200,13 @@ public partial class MainPage : ContentPage
 
     private async void MakeRuquest(string url)
     {
-        var response = await _hhttpClient.GetAsync(url);
+        if (_connectivity.NetworkAccess != NetworkAccess.Internet)
+        {
+            await Shell.Current.DisplayAlert("Помилка", "Інтернет відсутній", "ОК");
+            return;
+        }
+
+        var response = await _httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             await DisplayAlert("Помилка", response.StatusCode.ToString(), "OK");
@@ -228,6 +247,12 @@ public partial class MainPage : ContentPage
                 Language = Languages.UK,
                 Q = eQuery.Text,
                 SortBy = SortBys.PublishedAt
+            });
+        else
+            GetArticles(new TopHeadlinesRequest
+            {
+                Country = Countries.UA,
+                Language = Languages.UK
             });
     }
 }
